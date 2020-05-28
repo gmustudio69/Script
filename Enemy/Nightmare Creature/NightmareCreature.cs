@@ -36,45 +36,9 @@ public class NightmareCreature : MonoBehaviour
 		anim.SetBool ("Time Stop", time.TimeIsStop);
 		Distance = Vector3.Distance (Player.transform.position,this.transform.position);
 		if (time.TimeIsStop == true) {
-			anim.speed = 0;
-			nav.speed = 0;
+			Stopall();
 		} else {
-			anim.speed = 1;
-			if (Attacking == true) {
-				anim.speed = MainScript.SpeedAttack;
-			}
-			if (IsTrigger == false) {
-				if (MainScript.isInFov == true) {
-					anim.SetBool ("Idle", true);
-					anim.SetBool ("Break", false);
-					IsTrigger = true;
-				}
-			} else {
-				if (Distance <= 20 && Distance > 3) {
-					Walk ();
-				} else if (Distance < 3) {
-					Vector3 TransformRay = new Vector3 (transform.position.x, transform.position.y + 1, transform.position.z);
-					RotateWhenAttackFalse ();
-					if (CanAttack == true) {
-						RaycastHit hit;
-						if (Physics.Raycast (TransformRay, transform.forward, out hit)) {
-							if (hit.transform.tag == ("PLayer")) {
-								Debug.Log ("hit");
-								StartAttack ();
-							}
-						}
-					} else {
-						if (Time.time - lastTimeAttack > 4) {
-							CanAttack = true;
-						} 
-					}
-				} else if (Distance >= 20) {
-					anim.SetBool ("Break", true);
-					anim.SetBool ("Idle", false);
-					MainScript.isInFov = false;
-					IsTrigger = false;
-				}
-			}
+			Work();
 		}
     }
 	public void Walk (){
@@ -145,5 +109,47 @@ public class NightmareCreature : MonoBehaviour
 		} else {
 			CanMove = false;
 		}
+	}
+	public void Work(){
+	anim.speed = 1;
+			if (Attacking == true) {
+				anim.speed = MainScript.SpeedAttack;
+			}
+			if (IsTrigger == false) {
+				if (MainScript.isInFov == true) {
+					anim.SetBool ("Idle", true);
+					anim.SetBool ("Break", false);
+					IsTrigger = true;
+				}
+			} else {
+				if (Distance <= 20 && Distance > 3) {
+					Walk ();
+				} else if (Distance < 3) {
+					Vector3 TransformRay = new Vector3 (transform.position.x, transform.position.y + 1, transform.position.z);
+					RotateWhenAttackFalse ();
+					if (CanAttack == true) {
+						RaycastHit hit;
+						if (Physics.Raycast (TransformRay, transform.forward, out hit)) {
+							if (hit.transform.tag == ("PLayer")) {
+								Debug.Log ("hit");
+								StartAttack ();
+							}
+						}
+					} else {
+						if (Time.time - lastTimeAttack > 4) {
+							CanAttack = true;
+						} 
+					}
+				} else if (Distance >= 20) {
+					anim.SetBool ("Break", true);
+					anim.SetBool ("Idle", false);
+					MainScript.isInFov = false;
+					IsTrigger = false;
+				}
+			}
+	}
+	public void Stopall(){
+		anim.speed = 0;
+		nav.speed = 0;
 	}
 }
